@@ -1,0 +1,121 @@
+﻿@page "/"
+
+@using System.ComponentModel.DataAnnotations;
+@inject IJSRuntime JSRuntime;
+@using System.Reflection;
+
+<EditForm Model="@userData"
+          OnInvalidSubmit="@HandleInvalidSubmit"
+          Context="EditFormContext">
+    <DataAnnotationsValidator />
+    <DxFormLayout>
+        <DxFormLayoutTabPages ActiveTabIndex="@ActiveTabIndex" 
+                              ActiveTabIndexChanged=@OnActiveTabIndexChanged 
+                              RenderMode="TabsRenderMode.AllTabs" 
+                              ScrollMode="TabsScrollMode.NavButtons">
+            <DxFormLayoutTabPage Caption="Personal Information">
+                <DxFormLayoutItem Caption="First Name:" ColSpanMd="6">
+                    <DxTextBox @bind-Text="@userData.FirstName" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Last Name:" ColSpanMd="6">
+                    <DxTextBox @bind-Text="@userData.LastName" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Age:" ColSpanMd="6">
+                    <DxSpinEdit @bind-Value="@userData.Age" MinValue="0"></DxSpinEdit>
+                </DxFormLayoutItem>
+            </DxFormLayoutTabPage>
+            <DxFormLayoutTabPage Caption="Work Information">
+                <DxFormLayoutItem Caption="Company Name:" ColSpanMd="6">
+                    <DxTextBox @bind-Text="@userData.CompanyName" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Industry:" ColSpanMd="6">
+                    <DxSpinEdit @bind-Value="@userData.Industry"></DxSpinEdit>
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Position:" ColSpanMd="6">
+                    <DxTextBox @bind-Text="@userData.Position" />
+                </DxFormLayoutItem>
+            </DxFormLayoutTabPage>
+            <DxFormLayoutTabPage Caption="Contact Information">
+                <DxFormLayoutItem Caption="Email:" ColSpanMd="12">
+                    <DxMaskedInput @bind-Value="@userData.Email"
+                                   Mask="@EmailMask"
+                                   MaskMode="MaskMode.RegEx">
+                        <DxRegExMaskProperties InvalidInputNotificationText="Email is invalid" />
+                    </DxMaskedInput>
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Phone Number:" ColSpanMd="12">
+                    <DxMaskedInput @bind-Value="@userData.PhoneNumber"
+                                   Mask="(999)000-0000">
+                        <DxTextMaskProperties InvalidInputNotificationText="Phone number is invalid"></DxTextMaskProperties>
+                    </DxMaskedInput>
+                </DxFormLayoutItem>
+            </DxFormLayoutTabPage>
+        </DxFormLayoutTabPages>
+        <DxFormLayoutItem ColSpanMd="12">
+            <ValidationSummary />
+        </DxFormLayoutItem>
+    </DxFormLayout>
+    <div class="d-flex justify-content-between">
+        <div>
+            <DxButton Text="Previous" Enabled="@PrevEnabled" Click="OnPrev"></DxButton>
+            <DxButton Text="Next" Enabled="@NextEnabled" Click="OnNext"></DxButton>
+        </div>
+        <div>
+            <DxButton Text="Submit" SubmitFormOnClick="true"></DxButton>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    int ActiveTabIndex { get; set; }
+    bool PrevEnabled => ActiveTabIndex != 0;
+    bool NextEnabled => ActiveTabIndex != 2;
+
+    Dictionary<int, string[]> fieldsList = new Dictionary<int, string[]>() {
+      { 0, new string[]{"FirstName", "LastName", "Age" } },
+      { 1, new string[]{"CompanyName", "Industry", "Position" } },
+      { 2, new string[]{"Email", "PhoneNumber"  } }, };
+
+    UserObject userData = new UserObject();
+    string EmailMask { get; set; } = @"(\w|[.-])+@(\w|-)+\.(\w|-){2,4}";
+
+    void HandleInvalidSubmit(EditContext editContext) {
+        string firstInvalidFieldName = "";
+        PropertyInfo[] properties = editContext.Model.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        foreach (PropertyInfo property in properties) {
+            FieldIdentifier fieldIdentifier = editContext.Field(property.Name);
+            var isValid = !editContext.GetValidationMessages(fieldIdentifier).Any();
+            if (!isValid) {
+                firstInvalidFieldName = property.Name;
+                break;
+            }
+        }
+        int index = fieldsList.FirstOrDefault(x => x.Value.Contains(firstInvalidFieldName)).Key;
+        ActiveTabIndex = index;
+    }
+    void OnActiveTabIndexChanged(int index) {
+        ActiveTabIndex = index;
+    }
+    void OnPrev() {
+        ActiveTabIndex--;
+    }
+    void OnNext() {
+        ActiveTabIndex++;
+    }
+
+    public class UserObject {
+        public int Id { get; set; }
+        [Required]
+        public string? FirstName { get; set; }
+        [Required]
+        public string? LastName { get; set; }
+        [Range(18, 100000, ErrorMessage = "You must be older than 18 years")]
+        public int Age { get; set; }
+        [Required]
+        public string? CompanyName { get; set; }
+        public int Industry { get; set; }
+        public string? Position { get; set; }
+        public string? Email { get; set; }
+        public string? PhoneNumber { get; set; }
+    }
+}
