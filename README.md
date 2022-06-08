@@ -9,7 +9,7 @@ A user can click the **Previous** and **Next** buttons to navigate between tabs.
 
 ## Files to Look At
 
-Index.razor
+[Index.razor](https://github.com/DevExpress-Examples/Form-Layout-for-Blazor-Tabbed-Wizard/blob/22.1.2%2B/CS/TabbedLayout/Pages/Index.razor)
 
 ## Documentation
 
