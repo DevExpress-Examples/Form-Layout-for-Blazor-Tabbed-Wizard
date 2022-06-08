@@ -1,29 +1,19 @@
-<!-- default badges list -->
-[![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T1094069)
-[![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
-<!-- default badges end -->
-# Product/Platform - Task
+# Form Layout for Blazor - Tabbed Wizard
 
-This is the repository template for creating new examples. Describe the solved task here.
+This example demonstrates how to use the [DxFormLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxFormLayout) component to create a responsive tabbed wizard. 
 
-Put a screenshot that illustrates the result here.
+The Form Layout contains several tab groups ([DxFormLayoutTabPage](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxFormLayoutTabPage) component). Each tab group consists of several [items](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxFormLayoutItem) with editors. The standard Blazor [EditForm](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.forms.editform?view=aspnetcore-6.0) component validates user input. 
 
-Then, add implementation details (steps, code snippets, and other technical information in a free form), or add a link to an existing document with implementation details. 
+A user can click the **Previous** and **Next** buttons to navigate between tabs. If validation fails on the **Submit** button click, the wizard navigates to the first tab that contains invalid editor values. Use the [DxFormLayoutTabPages.ActiveTabIndex](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxFormLayoutTabPages.ActiveTabIndex) property to implement this functionality. 
+    
 
 ## Files to Look At
 
-- link.cs (VB: link.vb)
-- link.js
-- ...
+Index.razor
 
 ## Documentation
 
-- link
-- link
-- ...
+* [DxFormLayout](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxFormLayout)
+* [ActiveTabIndexChanged](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxFormLayoutTabPages.ActiveTabIndexChanged)
+* [DxFormLayoutTabPages.ActiveTabIndex](https://docs.devexpress.com/Blazor/DevExpress.Blazor.DxFormLayoutTabPages.ActiveTabIndex)
 
-## More Examples
-
-- link
-- link
-- ...
